@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators} from '@angular/forms'
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -19,16 +21,18 @@ export class LoginComponent {
               private router : Router,
               private authService : AuthService) { }
 
-  login(){
+  login() {
 
     const { email, password } = this.miFormulario.value;
 
     this.authService.login( email, password )
-      .subscribe( resp => {
-        console.log(resp);
-        
-      })
+      .subscribe( ok => {
 
-    this.router.navigateByUrl('/dashboard');
+        if ( ok === true ) {
+          this.router.navigateByUrl('/dashboard');
+        } else {
+          Swal.fire('Error', ok, 'error');
+        }
+      });
   }
 }
